@@ -1,0 +1,93 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+
+// Helper functions for input
+char* readline() {
+    size_t alloc_length = 1024;
+    size_t data_length = 0;
+    char* data = malloc(alloc_length);
+
+    while (1) {
+        char* cursor = data + data_length;
+        if (!fgets(cursor, alloc_length - data_length, stdin)) break;
+        data_length += strlen(cursor);
+        if (data_length < alloc_length - 1 || data[data_length - 1] == '\n') break;
+        alloc_length <<= 1;
+        data = realloc(data, alloc_length);
+    }
+
+    if (data[data_length - 1] == '\n') data[data_length - 1] = '\0';
+    return data;
+}
+
+char* ltrim(char* str) {
+    while (*str && isspace(*str)) str++;
+    return str;
+}
+
+char* rtrim(char* str) {
+    char* end = str + strlen(str) - 1;
+    while (end >= str && isspace(*end)) end--;
+    *(end + 1) = '\0';
+    return str;
+}
+
+int parse_int(char* str) {
+    return (int)strtol(str, NULL, 10);
+}
+
+// Main logic for Kaprekar numbers
+void kaprekarNumbers(int p, int q) {
+    int found = 0;
+
+    for (long i = p; i <= q; i++) {
+        long sq = i * i;
+
+        char sq_str[30];
+        sprintf(sq_str, "%ld", sq);
+
+        int d = 0;
+        long temp = i;
+        while (temp > 0) {
+            d++;
+            temp /= 10;
+        }
+
+        char left[30] = "0";
+        char right[30] = "0";
+        int len = strlen(sq_str);
+
+        if (d <= len)
+            strcpy(right, sq_str + len - d);
+        else
+            strcpy(right, sq_str);
+
+        if (len - d > 0) {
+            strncpy(left, sq_str, len - d);
+            left[len - d] = '\0';
+        }
+
+        long left_val = atol(left);
+        long right_val = atol(right);
+
+        if (left_val + right_val == i) {
+            printf("%ld ", i);
+            found = 1;
+        }
+    }
+
+    if (!found) {
+        printf("INVALID RANGE");
+    }
+    printf("\n");
+}
+
+// Entry point
+int main() {
+    int p = parse_int(ltrim(rtrim(readline())));
+    int q = parse_int(ltrim(rtrim(readline())));
+    kaprekarNumbers(p, q);
+    return 0;
+}
