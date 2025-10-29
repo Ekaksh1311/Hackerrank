@@ -1,0 +1,22 @@
+def pairs(k, arr):
+    # Convert the list to a set for O(1) lookups
+    values = set(arr)
+    count = 0
+
+    # For each number, check if num + k exists in the set
+    for num in arr:
+        if num + k in values:
+            count += 1
+
+    return count
+
+# Input handling
+if __name__ == '__main__':
+    # Read n and k
+    n, k = map(int, input().split())
+
+    # Read the array
+    arr = list(map(int, input().split()))
+
+    # Output the result
+    print(pairs(k, arr))
