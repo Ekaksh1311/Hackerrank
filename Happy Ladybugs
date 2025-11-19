@@ -1,0 +1,30 @@
+def happyLadybugs(b):
+    # Case 1: No empty cell
+    if '_' not in b:
+        # Check if already happy
+        for i in range(len(b)):
+            if (i > 0 and b[i] == b[i-1]) or (i < len(b)-1 and b[i] == b[i+1]):
+                continue
+            else:
+                return "NO"
+        return "YES"
+    
+    # Case 2: There are empty cells
+    from collections import Counter
+    counts = Counter(b)
+    
+    # If any color has only 1 bug, impossible
+    for k, v in counts.items():
+        if k != '_' and v == 1:
+            return "NO"
+    
+    return "YES"
+
+
+# Driver code for Hackerrank input format
+if __name__ == "__main__":
+    g = int(input().strip())
+    for _ in range(g):
+        n = int(input().strip())
+        b = input().strip()
+        print(happyLadybugs(b))
